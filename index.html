@@ -482,8 +482,11 @@ window.addEventListener('scroll', ()=>{
   });
 });
 
-// Animated counters
+// Animated counters - only run if elements exist
+const statS = document.getElementById('statSeason');
+const statM = document.getElementById('statMembers');
 function animateCount(el, target, suffix=''){
+  if(!el) return;
   let start = 0;
   const step = target / 40;
   const timer = setInterval(()=>{
@@ -495,13 +498,14 @@ function animateCount(el, target, suffix=''){
 const obs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
-      animateCount(document.getElementById('statSeason'), 1, '회');
-      animateCount(document.getElementById('statMembers'), 36, '+');
+      animateCount(statS, 1, '회');
+      animateCount(statM, 36, '+');
       obs.disconnect();
     }
   });
 });
-obs.observe(document.querySelector('.hero-stats'));
+const heroStats = document.querySelector('.hero-stats');
+if(heroStats) obs.observe(heroStats);
 
 function toast(msg){
   const t = document.getElementById('toast');
