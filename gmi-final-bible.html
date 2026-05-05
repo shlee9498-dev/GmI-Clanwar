@@ -17,7 +17,8 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 
 /* BG */
 body::before{content:'';position:fixed;inset:0;
@@ -80,17 +81,20 @@ body::after{content:'';position:fixed;inset:0;
 .timeline{display:flex;flex-direction:column;gap:0}
 .tl-item{display:flex;align-items:stretch;gap:20px}
 .tl-left{display:flex;flex-direction:column;align-items:center;width:100px;flex-shrink:0}
-.tl-time{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;line-height:1;text-align:center}
+.tl-time{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;line-height:1;text-align:center;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .tl-time small{display:block;font-size:11px;color:var(--muted);font-family:'Noto Sans KR',sans-serif;font-weight:400;margin-top:2px}
 .tl-line{flex:1;width:2px;background:var(--border);margin:8px 0}
 .tl-right{flex:1;padding:0 0 28px}
-.tl-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px 18px}
-.tl-card h3{font-family:'Black Han Sans',sans-serif;font-size:16px;margin-bottom:6px}
-.tl-card p{font-size:13px;color:var(--muted);line-height:1.7}
-.tl-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:8px}
-.badge-auction{background:rgba(191,0,255,0.15);color:#d8a0ff;border:1px solid rgba(191,0,255,0.3)}
-.badge-game{background:rgba(255,45,155,0.15);color:#ff8cc8;border:1px solid rgba(255,45,155,0.3)}
-.badge-live{background:rgba(255,50,50,0.15);color:#ff8888;border:1px solid rgba(255,50,50,0.3)}
+.tl-card{background:rgba(20,15,40,0.95);border:1px solid var(--border);border-radius:12px;padding:16px 20px;
+  backdrop-filter:none}
+.tl-card h3{font-family:'Black Han Sans',sans-serif;font-size:17px;margin-bottom:8px;color:#fff;
+  -webkit-font-smoothing:antialiased;letter-spacing:.5px;text-shadow:none}
+.tl-card p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.8;-webkit-font-smoothing:antialiased}
+.tl-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px;margin-right:4px}
+.badge-auction{background:rgba(191,0,255,0.2);color:#e0b0ff;border:1px solid rgba(191,0,255,0.4)}
+.badge-game{background:rgba(255,45,155,0.2);color:#ffaacc;border:1px solid rgba(255,45,155,0.4)}
+.badge-live{background:rgba(255,50,50,0.2);color:#ffaaaa;border:1px solid rgba(255,50,50,0.4)}
 
 /* ====== RULE TABLE ====== */
 .rule-table{width:100%;border-collapse:collapse;font-size:13px}
@@ -263,7 +267,7 @@ body::after{content:'';position:fixed;inset:0;
     <a href="./index.html" style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;text-decoration:none;background:linear-gradient(135deg,#bf00ff,#00c8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">GmI</a>
     <span style="font-family:'Black Han Sans',sans-serif;font-size:13px;color:rgba(255,255,255,0.4)">내전 바이블 — 5월 10일 1회</span>
     <div style="margin-left:auto;display:flex;gap:10px">
-      <a href="https://discord.gg/zmMexcHFp" target="_blank" style="padding:7px 16px;border-radius:20px;border:1px solid rgba(191,0,255,0.35);background:rgba(191,0,255,0.1);color:#d8b4fe;font-size:12px;font-weight:700;text-decoration:none">💬 디스코드</a>
+      <a href="https://discord.gg/9RjqdSKw" target="_blank" style="padding:7px 16px;border-radius:20px;border:1px solid rgba(191,0,255,0.35);background:rgba(191,0,255,0.1);color:#d8b4fe;font-size:12px;font-weight:700;text-decoration:none">💬 디스코드</a>
     </div>
   </div>
 </div>
@@ -400,7 +404,7 @@ G등급 선수일수록 경매 경쟁이 치열합니다 🔥
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 클랜원
-  📌 #전적관리-ID-작성 채널 미작성자는 지금 바로 등록!
+  📌 #내전-신청-접수처 채널 미작성자는 지금 바로 등록!
   (미등록 시 경매 명단 제외됩니다)
 
 클랜원 지인 (용병)
@@ -494,7 +498,7 @@ Q. 팀 인원은 몇 명인가요?
         <div class="pri-num">1</div>
         <div class="pri-info">
           <h4>클랜원 (GmI 소속)</h4>
-          <p>인게임 ID 제출 완료 클랜원 전원 · #전적관리-ID-작성 등록 필수</p>
+          <p>인게임 ID 제출 완료 클랜원 전원 · #내전-신청-접수처 등록 필수</p>
         </div>
         <div class="pri-fee"><div class="start" style="font-size:10px;color:var(--muted)">참가비</div><div class="fee">무료</div></div>
       </div>
@@ -509,7 +513,7 @@ Q. 팀 인원은 몇 명인가요?
     </div>
     <div class="notice">
       <strong>⚠️ 클랜원 ID 미제출자</strong>는 경매 명단에서 제외됩니다.<br>
-      5월 10일 전까지 <strong>#전적관리-ID-작성</strong> 채널에 꼭 등록해주세요!
+      5월 10일 전까지 <strong>#내전-신청-접수처</strong> 채널에 꼭 등록해주세요!
     </div>
   </div>
 
@@ -763,7 +767,7 @@ Q. 팀 인원은 몇 명인가요?
 ━━━━━━━━━━━━━━━━━━━━━━
 GmI (GYMMRIacademy) — 배틀그라운드 클랜
 클랜 입단 문의: 디스코드 준구님 DM
-디스코드 서버: discord.gg/zmMexcHFp
+디스코드 서버: discord.gg/9RjqdSKw
 
 ━━━━━━━━━━━━━━━━━━━━━━
 #배틀그라운드 #배그내전 #클랜내전 #경매드래프트 #PUBG
