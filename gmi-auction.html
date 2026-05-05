@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GmI 내전 경매 시스템</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --g: #bf00ff;
+    --m: #7b2fff;
+    --i: #00c8ff;
+    --pink: #ff2d9b;
+    --bg: #07050f;
+    --card: #0e0a1f;
+    --border: rgba(123,47,255,0.35);
+    --glow-g: 0 0 24px #bf00ff88, 0 0 60px #bf00ff33;
+    --glow-i: 0 0 24px #00c8ff88, 0 0 60px #00c8ff33;
+    --glow-m: 0 0 24px #7b2fff88;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG grid */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(123,47,255,0.04) 60px, rgba(123,47,255,0.04) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(0,200,255,0.04) 60px, rgba(0,200,255,0.04) 61px);
+    pointer-events:none; z-index:0;
+  }
+
+  .wrapper { position:relative; z-index:1; padding:20px; max-width:1400px; margin:0 auto; }
+
+  /* ===== HEADER ===== */
+  header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, rgba(191,0,255,0.1), rgba(0,200,255,0.08));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(12px);
+    position:relative; overflow:hidden;
+  }
+  header::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, var(--g), var(--i), var(--pink));
+  }
+  .logo-area { display:flex; align-items:center; gap:20px; }
+  .logo-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 52px; font-weight:700; line-height:1;
+    background: linear-gradient(135deg, var(--g), var(--i));
+    -webkit-background-clip: text; -webkit-text-fill-color:transparent;
+    filter: drop-shadow(0 0 12px #bf00ff66);
+  }
+  .clan-name {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size:13px; color: rgba(255,255,255,0.5);
+    letter-spacing:3px; text-transform:uppercase;
+  }
+  .event-title {
+    text-align:center;
+  }
+  .event-title h1 {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size:28px;
+    background: linear-gradient(90deg, #fff, var(--i));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .event-title p { font-size:13px; color:rgba(255,255,255,0.4); margin-top:4px; letter-spacing:2px; }
+  .prize-header {
+    text-align:right;
+  }
+  .prize-label { font-size:11px; color:rgba(255,255,255,0.4); letter-spacing:2px; text-transform:uppercase; }
+  .prize-amount {
+    font-family:'Rajdhani',sans-serif; font-size:42px; font-weight:700;
+    background: linear-gradient(90deg, var(--pink), #ffaa00);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 10px #ff2d9b66);
+  }
+  .prize-real { font-size:12px; color:rgba(255,255,255,0.35); }
+
+  /* ===== GRADE LEGEND ===== */
+  .grade-legend {
+    display:flex; gap:12px; margin-bottom:24px;
+  }
+  .grade-card {
+    flex:1; padding:14px 18px;
+    border-radius:12px; border:1px solid;
+    display:flex; align-items:center; gap:14px;
+    background: rgba(14,10,31,0.8);
+    position:relative; overflow:hidden;
+    transition: transform 0.2s;
+  }
+  .grade-card:hover { transform: translateY(-2px); }
+  .grade-card.G { border-color: rgba(191,0,255,0.5); }
+  .grade-card.m { border-color: rgba(123,47,255,0.5); }
+  .grade-card.I { border-color: rgba(0,200,255,0.5); }
+  .grade-badge {
+    width:48px; height:48px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Rajdhani',sans-serif; font-size:26px; font-weight:700;
+    flex-shrink:0;
+  }
+  .grade-card.G .grade-badge { background:rgba(191,0,255,0.2); color:var(--g); box-shadow: var(--glow-g); }
+  .grade-card.m .grade-badge { background:rgba(123,47,255,0.2); color:var(--m); box-shadow: var(--glow-m); }
+  .grade-card.I .grade-badge { background:rgba(0,200,255,0.2); color:var(--i); box-shadow: var(--glow-i); }
+  .grade-info h3 { font-size:15px; font-weight:700; }
+  .grade-card.G .grade-info h3 { color:var(--g); }
+  .grade-card.m .grade-info h3 { color:var(--m); }
+  .grade-card.I .grade-info h3 { color:var(--i); }
+  .grade-info p { font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; }
+  .grade-price { margin-left:auto; text-align:right; }
+  .grade-price .start { font-size:10px; color:rgba(255,255,255,0.35); }
+  .grade-price .amount { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; color:#fff; }
+
+  /* ===== MAIN GRID ===== */
+  .main-grid { display:grid; grid-template-columns:1fr 380px; gap:20px; margin-bottom:20px; }
+
+  /* ===== AUCTION BOARD ===== */
+  .auction-board {
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius:16px; overflow:hidden;
+  }
+  .board-header {
+    padding:16px 24px;
+    background:linear-gradient(90deg, rgba(191,0,255,0.15), transparent);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .board-header h2 { font-family:'Black Han Sans',sans-serif; font-size:18px; }
+  .live-badge {
+    display:flex; align-items:center; gap:6px;
+    background:rgba(255,45,45,0.15); border:1px solid rgba(255,45,45,0.4);
+    border-radius:20px; padding:4px 12px;
+    font-size:12px; font-weight:700; color:#ff4444;
+    letter-spacing:1px;
+  }
+  .live-dot {
+    width:7px; height:7px; border-radius:50%; background:#ff4444;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  /* CURRENT PLAYER */
+  .current-player {
+    padding:28px 24px;
+    display:flex; gap:24px; align-items:center;
+    border-bottom:1px solid var(--border);
+  }
+  .player-grade-big {
+    width:80px; height:80px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Rajdhani',sans-serif; font-size:44px; font-weight:700;
+    flex-shrink:0;
+  }
+  .pg-G { background:rgba(191,0,255,0.15); color:var(--g); box-shadow:0 0 30px #bf00ff44, inset 0 0 20px #bf00ff11; border:2px solid rgba(191,0,255,0.4); }
+  .pg-m { background:rgba(123,47,255,0.15); color:var(--m); box-shadow:0 0 30px #7b2fff44, inset 0 0 20px #7b2fff11; border:2px solid rgba(123,47,255,0.4); }
+  .pg-I { background:rgba(0,200,255,0.15); color:var(--i); box-shadow:0 0 30px #00c8ff44, inset 0 0 20px #00c8ff11; border:2px solid rgba(0,200,255,0.4); }
+  .player-info h2 { font-family:'Black Han Sans',sans-serif; font-size:32px; }
+  .player-sub { font-size:13px; color:rgba(255,255,255,0.4); margin-top:4px; }
+  .player-stats { display:flex; gap:16px; margin-top:12px; }
+  .stat { background:rgba(255,255,255,0.05); border-radius:8px; padding:6px 12px; text-align:center; }
+  .stat-val { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; }
+  .stat-key { font-size:10px; color:rgba(255,255,255,0.35); }
+
+  /* BID DISPLAY */
+  .bid-section { padding:20px 24px; border-bottom:1px solid var(--border); }
+  .bid-label { font-size:11px; color:rgba(255,255,255,0.35); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+  .current-bid {
+    font-family:'Rajdhani',sans-serif; font-size:56px; font-weight:700; line-height:1;
+    background: linear-gradient(90deg, #ffcc00, #ff6600);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 16px #ffaa0066);
+    animation: bidglow 2s ease-in-out infinite;
+  }
+  @keyframes bidglow { 0%,100%{filter:drop-shadow(0 0 16px #ffaa0066);} 50%{filter:drop-shadow(0 0 30px #ffaa00aa);} }
+  .bid-by { font-size:14px; color:rgba(255,255,255,0.5); margin-top:6px; }
+  .bid-by span { color:var(--i); font-weight:700; }
+
+  /* BID HISTORY */
+  .bid-history { padding:16px 24px; }
+  .bid-history h3 { font-size:12px; color:rgba(255,255,255,0.35); letter-spacing:2px; margin-bottom:12px; }
+  .bid-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 12px; border-radius:8px; margin-bottom:6px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    font-size:13px;
+    transition:all 0.3s;
+  }
+  .bid-item.top { background:rgba(255,170,0,0.08); border-color:rgba(255,170,0,0.2); }
+  .bid-team { font-weight:700; }
+  .bid-val { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; }
+  .bid-item.top .bid-val { color:#ffcc00; }
+
+  /* ===== SIDE PANEL ===== */
+  .side-panel { display:flex; flex-direction:column; gap:16px; }
+
+  /* BUDGET TRACKER */
+  .budget-tracker {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px; overflow:hidden; flex:1;
+  }
+  .tracker-header {
+    padding:14px 18px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(90deg, rgba(0,200,255,0.1), transparent);
+    font-family:'Black Han Sans',sans-serif; font-size:15px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .tracker-header span { font-size:11px; color:rgba(255,255,255,0.35); font-family:'Noto Sans KR',sans-serif; font-weight:400; }
+  .team-row {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 18px; border-bottom:1px solid rgba(255,255,255,0.04);
+    transition:background 0.2s;
+  }
+  .team-row:hover { background:rgba(255,255,255,0.03); }
+  .team-num {
+    width:28px; height:28px; border-radius:8px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700;
+    flex-shrink:0; color:rgba(255,255,255,0.6);
+  }
+  .team-info { flex:1; min-width:0; }
+  .team-name { font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .budget-bar-wrap { height:4px; background:rgba(255,255,255,0.08); border-radius:2px; margin-top:4px; }
+  .budget-bar { height:4px; border-radius:2px; transition:width 0.5s; }
+  .team-budget { font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; flex-shrink:0; }
+
+  /* SOAKUP BOX */
+  .soak-box {
+    background:var(--card);
+    border:1px solid rgba(255,45,45,0.3);
+    border-radius:16px; padding:18px;
+    position:relative; overflow:hidden;
+  }
+  .soak-box::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, #ff2d2d, #ff9900);
+  }
+  .soak-title { font-size:11px; color:rgba(255,100,100,0.7); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+  .soak-amount {
+    font-family:'Rajdhani',sans-serif; font-size:36px; font-weight:700;
+    color:#ff4444; filter:drop-shadow(0 0 10px #ff444466);
+  }
+  .prize-remain-label { font-size:11px; color:rgba(255,255,255,0.35); margin-top:10px; }
+  .prize-remain {
+    font-family:'Rajdhani',sans-serif; font-size:28px; font-weight:700;
+    background:linear-gradient(90deg, var(--pink), #ffaa00);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+
+  /* SPONSOR BAR */
+  .sponsor-bar {
+    background:var(--card);
+    border:1px solid rgba(191,0,255,0.3);
+    border-radius:16px; padding:16px 18px;
+    position:relative; overflow:hidden;
+  }
+  .sponsor-bar::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, var(--g), var(--pink));
+  }
+  .sponsor-label { font-size:11px; color:rgba(191,0,255,0.7); letter-spacing:2px; margin-bottom:10px; }
+  .sponsor-items { display:flex; flex-direction:column; gap:6px; }
+  .sponsor-item { display:flex; justify-content:space-between; align-items:center; }
+  .sponsor-rank { font-size:12px; color:rgba(255,255,255,0.4); }
+  .sponsor-name { font-weight:700; font-size:14px; color:var(--g); }
+  .sponsor-amount { font-family:'Rajdhani',sans-serif; font-size:14px; color:rgba(255,255,255,0.6); }
+
+  /* SEPARATOR */
+  .sep { height:1px; background:linear-gradient(90deg, transparent, var(--border), transparent); margin:4px 0; }
+
+  /* BOTTOM TICKER */
+  .ticker {
+    background:rgba(191,0,255,0.08);
+    border:1px solid rgba(191,0,255,0.2);
+    border-radius:10px; padding:10px 20px;
+    display:flex; align-items:center; gap:16px; overflow:hidden;
+  }
+  .ticker-label {
+    font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700;
+    color:var(--g); flex-shrink:0; letter-spacing:1px;
+  }
+  .ticker-content {
+    font-size:13px; color:rgba(255,255,255,0.55);
+    white-space:nowrap;
+    animation: scroll 30s linear infinite;
+  }
+  @keyframes scroll {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* CONTROLS */
+  .controls {
+    margin-top:20px;
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:20px;
+  }
+  .controls h3 { font-family:'Black Han Sans',sans-serif; font-size:15px; margin-bottom:16px; color:rgba(255,255,255,0.7); }
+  .ctrl-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:12px; }
+  .ctrl-group label { font-size:11px; color:rgba(255,255,255,0.4); display:block; margin-bottom:6px; }
+  .ctrl-group input, .ctrl-group select {
+    width:100%; background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12); border-radius:8px;
+    color:#fff; padding:8px 12px; font-size:14px; font-family:'Noto Sans KR',sans-serif;
+    outline:none; transition:border-color 0.2s;
+  }
+  .ctrl-group input:focus, .ctrl-group select:focus { border-color:var(--m); }
+  .ctrl-group select option { background:#1a1430; }
+  .btn-row { display:flex; gap:10px; }
+  .btn {
+    padding:10px 20px; border-radius:10px; border:none;
+    font-family:'Black Han Sans',sans-serif; font-size:14px; cursor:pointer;
+    transition:all 0.2s; flex:1;
+  }
+  .btn-bid {
+    background:linear-gradient(135deg, var(--g), var(--m));
+    color:#fff; box-shadow:0 4px 20px rgba(191,0,255,0.4);
+  }
+  .btn-bid:hover { transform:translateY(-2px); box-shadow:0 6px 30px rgba(191,0,255,0.6); }
+  .btn-sold {
+    background:linear-gradient(135deg, #ff6600, #ffcc00);
+    color:#000; box-shadow:0 4px 20px rgba(255,170,0,0.4);
+  }
+  .btn-sold:hover { transform:translateY(-2px); }
+  .btn-next {
+    background:rgba(255,255,255,0.06);
+    color:rgba(255,255,255,0.6);
+    border:1px solid rgba(255,255,255,0.1);
+  }
+  .btn-next:hover { background:rgba(255,255,255,0.1); color:#fff; }
+
+  /* SOLD overlay */
+  .sold-overlay {
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
+    align-items:center; justify-content:center; flex-direction:column;
+  }
+  .sold-overlay.show { display:flex; animation:fadeIn 0.3s; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .sold-text {
+    font-family:'Black Han Sans',sans-serif; font-size:100px; line-height:1;
+    background:linear-gradient(90deg, #ffcc00, #ff6600, #ff2d9b);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    animation:soldPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+    filter:drop-shadow(0 0 40px #ffaa00aa);
+    text-shadow:none;
+  }
+  @keyframes soldPop { 0%{transform:scale(0.3) rotate(-10deg)} 100%{transform:scale(1) rotate(0)} }
+  .sold-detail { font-size:24px; color:rgba(255,255,255,0.7); margin-top:10px; text-align:center; }
+  .sold-amount { font-family:'Rajdhani',sans-serif; font-size:48px; color:#ffcc00; }
+
+  /* RESPONSIVE scroll fix */
+  .teams-list { max-height:340px; overflow-y:auto; }
+  .teams-list::-webkit-scrollbar { width:3px; }
+  .teams-list::-webkit-scrollbar-track { background:transparent; }
+  .teams-list::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- HEADER -->
+  <header>
+    <div class="logo-area">
+      <div class="logo-text">GmI</div>
+      <div>
+        <div class="clan-name">GYMMRIacademy</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">CLAN WAR DRAFT AUCTION</div>
+      </div>
+    </div>
+    <div class="event-title">
+      <h1>🏆 GmI 내전 경매</h1>
+      <p>LIVE DRAFT · STREAMING EDITION</p>
+    </div>
+    <div class="prize-header">
+      <div class="prize-label">총 상금</div>
+      <div class="prize-amount" id="totalPrize">50억원</div>
+      <div class="prize-real">(실제 50만원)</div>
+    </div>
+  </header>
+
+  <!-- GRADE LEGEND -->
+  <div class="grade-legend">
+    <div class="grade-card G">
+      <div class="grade-badge">G</div>
+      <div class="grade-info">
+        <h3>G 등급</h3>
+        <p>에이스급 · 핵심 매물</p>
+      </div>
+      <div class="grade-price">
+        <div class="start">시작가</div>
+        <div class="amount">5,000만원~</div>
+      </div>
+    </div>
+    <div class="grade-card m">
+      <div class="grade-badge">m</div>
+      <div class="grade-info">
+        <h3>m 등급</h3>
+        <p>준에이스 · 가성비 픽</p>
+      </div>
+      <div class="grade-price">
+        <div class="start">시작가</div>
+        <div class="amount">2,000만원~</div>
+      </div>
+    </div>
+    <div class="grade-card I">
+      <div class="grade-badge">I</div>
+      <div class="grade-info">
+        <h3>I 등급</h3>
+        <p>실속형 · 숨은 진주</p>
+      </div>
+      <div class="grade-price">
+        <div class="start">시작가</div>
+        <div class="amount">500만원~</div>
+      </div>
+    </div>
+    <div style="flex:1; background:rgba(14,10,31,0.8); border:1px solid rgba(255,45,155,0.3); border-radius:12px; padding:14px 18px; display:flex; flex-direction:column; justify-content:center;">
+      <div style="font-size:10px; color:rgba(255,45,155,0.7); letter-spacing:2px; margin-bottom:6px;">🤫 스폰서 특권</div>
+      <div style="font-size:13px; font-weight:700; color:var(--pink);">하이재킹 / 운명교체</div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:4px;">후원 1위 전용 권한</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-grid">
+    <!-- AUCTION BOARD -->
+    <div class="auction-board">
+      <div class="board-header">
+        <h2>📺 현재 경매 매물</h2>
+        <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      </div>
+
+      <div class="current-player">
+        <div class="player-grade-big pg-G" id="currentGrade">G</div>
+        <div class="player-info">
+          <h2 id="currentName">닉네임 입력</h2>
+          <div class="player-sub" id="currentSub">G등급 · 에이스급 매물</div>
+          <div class="player-stats">
+            <div class="stat"><div class="stat-val" id="currentKD">-</div><div class="stat-key">KD</div></div>
+            <div class="stat"><div class="stat-val" id="currentWin">-</div><div class="stat-key">승률</div></div>
+            <div class="stat"><div class="stat-val" id="currentRole">-</div><div class="stat-key">포지션</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bid-section">
+        <div class="bid-label">현재 최고 입찰가</div>
+        <div class="current-bid" id="currentBid">5,000만원</div>
+        <div class="bid-by">최고 입찰팀: <span id="topBidTeam">대기중...</span></div>
+      </div>
+
+      <div class="bid-history">
+        <h3>입찰 내역</h3>
+        <div id="bidList">
+          <div class="bid-item" style="color:rgba(255,255,255,0.3); justify-content:center; font-size:13px; padding:20px;">경매 시작을 기다리는 중...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="side-panel">
+      <!-- SOAKUP -->
+      <div class="soak-box">
+        <div class="soak-title">🔥 소각된 금액 (총 지출)</div>
+        <div class="soak-amount" id="soakAmount">0원</div>
+        <div class="sep" style="margin:12px 0;"></div>
+        <div class="prize-remain-label">💰 현재 예상 우승 상금</div>
+        <div class="prize-remain" id="remainPrize">50억원</div>
+      </div>
+
+      <!-- SPONSOR -->
+      <div class="sponsor-bar">
+        <div class="sponsor-label">🤫 스폰서 후원 현황</div>
+        <div class="sponsor-items">
+          <div class="sponsor-item">
+            <span class="sponsor-rank">🥇 1위</span>
+            <span class="sponsor-name" id="sp1name">-</span>
+            <span class="sponsor-amount" id="sp1amt">0원</span>
+          </div>
+          <div class="sponsor-item">
+            <span class="sponsor-rank">🥈 2위</span>
+            <span class="sponsor-name" id="sp2name">-</span>
+            <span class="sponsor-amount" id="sp2amt">0원</span>
+          </div>
+          <div class="sponsor-item">
+            <span class="sponsor-rank">🥉 3위</span>
+            <span class="sponsor-name" id="sp3name">-</span>
+            <span class="sponsor-amount" id="sp3amt">0원</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUDGET TRACKER -->
+      <div class="budget-tracker">
+        <div class="tracker-header">
+          💼 팀별 잔여 예산
+          <span id="teamCount">0팀</span>
+        </div>
+        <div class="teams-list" id="teamsList">
+          <div style="padding:30px; text-align:center; color:rgba(255,255,255,0.25); font-size:13px;">팀 설정에서 추가하세요</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker" style="margin-bottom:16px;">
+    <div class="ticker-label">📢 GmI</div>
+    <div class="ticker-content" id="tickerText">
+      🏆 GmI (GYMMRIacademy) 내전 경매 LIVE · G등급 에이스부터 경매 시작 · 팀장 희망자 선착순 모집중 · 상금 최대 50억원 (실제 50만원) · 스폰서 후원 특권: 하이재킹 & 운명교체권 · 입금 완료자만 경매 명단 등재 · 화이팅!! 🔥
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <h3>⚙️ 운영자 패널 (방송 중 실시간 입력)</h3>
+    <div class="ctrl-grid">
+      <div class="ctrl-group">
+        <label>현재 매물 닉네임</label>
+        <input type="text" id="inputName" placeholder="닉네임" oninput="updatePlayer()">
+      </div>
+      <div class="ctrl-group">
+        <label>등급</label>
+        <select id="inputGrade" onchange="updatePlayer()">
+          <option value="G">G 등급 (에이스)</option>
+          <option value="m">m 등급 (준에이스)</option>
+          <option value="I">I 등급 (실속형)</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>KD / 승률 / 포지션</label>
+        <input type="text" id="inputStats" placeholder="예: 2.1 / 68% / 돌격" oninput="updateStats()">
+      </div>
+    </div>
+    <div class="ctrl-grid">
+      <div class="ctrl-group">
+        <label>입찰금액 입력 (억/천만 단위)</label>
+        <input type="text" id="inputBid" placeholder="예: 1억 5천만원">
+      </div>
+      <div class="ctrl-group">
+        <label>입찰 팀명</label>
+        <input type="text" id="inputTeam" placeholder="팀장 닉네임">
+      </div>
+      <div class="ctrl-group">
+        <label>총 팀 수 (설정)</label>
+        <select id="inputTeamCount" onchange="initTeams()">
+          <option value="8">8팀 (24~32명)</option>
+          <option value="10">10팀 (30~40명)</option>
+          <option value="12">12팀 (36~48명)</option>
+          <option value="16" selected>16팀 (48~64명)</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-bid" onclick="placeBid()">💰 입찰 등록</button>
+      <button class="btn btn-sold" onclick="soldPlayer()">🔨 낙찰!</button>
+      <button class="btn btn-next" onclick="nextPlayer()">▶ 다음 매물</button>
+      <button class="btn btn-next" style="flex:0.5;" onclick="resetBids()">↺ 초기화</button>
+    </div>
+  </div>
+</div>
+
+<!-- SOLD OVERLAY -->
+<div class="sold-overlay" id="soldOverlay" onclick="this.classList.remove('show')">
+  <div class="sold-text">낙!!찰!!</div>
+  <div class="sold-detail">
+    <div id="soldPlayerName" style="font-size:28px; font-weight:900; margin-bottom:8px;"></div>
+    <div id="soldTeamName" style="color:rgba(255,255,255,0.6);">→ <span style="color:#00c8ff;font-weight:700;"></span> 입단</div>
+    <div class="sold-amount" id="soldBidAmount"></div>
+  </div>
+</div>
+
+<script>
+  // State
+  let totalBudget = 50; // 억
+  let soakTotal = 0;
+  let bidHistory = [];
+  let teamBudgets = {};
+  let numTeams = 16;
+  const BUDGET_PER_TEAM = 6; // 억
+
+  const gradeColors = { G: '#bf00ff', m: '#7b2fff', I: '#00c8ff' };
+  const gradeLabels = { G: 'G등급 · 에이스급 매물', m: 'm등급 · 준에이스 매물', I: 'I등급 · 실속형 매물' };
+
+  function initTeams() {
+    numTeams = parseInt(document.getElementById('inputTeamCount').value);
+    teamBudgets = {};
+    for (let i = 1; i <= numTeams; i++) {
+      teamBudgets[`팀${i}`] = BUDGET_PER_TEAM;
+    }
+    document.getElementById('teamCount').textContent = numTeams + '팀';
+    renderTeams();
+  }
+
+  function renderTeams() {
+    const list = document.getElementById('teamsList');
+    list.innerHTML = '';
+    Object.entries(teamBudgets).forEach(([name, budget], idx) => {
+      const pct = (budget / BUDGET_PER_TEAM) * 100;
+      const color = pct > 60 ? '#00c8ff' : pct > 30 ? '#ffcc00' : '#ff4444';
+      const div = document.createElement('div');
+      div.className = 'team-row';
+      div.innerHTML = `
+        <div class="team-num">${idx+1}</div>
+        <div class="team-info">
+          <div class="team-name">${name}</div>
+          <div class="budget-bar-wrap"><div class="budget-bar" style="width:${pct}%;background:${color};"></div></div>
+        </div>
+        <div class="team-budget" style="color:${color}">${budget.toFixed(1)}억</div>
+      `;
+      div.onclick = () => document.getElementById('inputTeam').value = name;
+      list.appendChild(div);
+    });
+  }
+
+  function updatePlayer() {
+    const name = document.getElementById('inputName').value || '닉네임 입력';
+    const grade = document.getElementById('inputGrade').value;
+    document.getElementById('currentName').textContent = name;
+    document.getElementById('currentGrade').textContent = grade;
+    document.getElementById('currentGrade').className = `player-grade-big pg-${grade}`;
+    document.getElementById('currentSub').textContent = gradeLabels[grade];
+    resetBids(true);
+  }
+
+  function updateStats() {
+    const parts = document.getElementById('inputStats').value.split('/');
+    document.getElementById('currentKD').textContent = parts[0]?.trim() || '-';
+    document.getElementById('currentWin').textContent = parts[1]?.trim() || '-';
+    document.getElementById('currentRole').textContent = parts[2]?.trim() || '-';
+  }
+
+  function parseBidAmount(str) {
+    // Parse "X억 Y천만원" → number in 억
+    let val = 0;
+    const uk = str.match(/(\d+(?:\.\d+)?)\s*억/);
+    const chun = str.match(/(\d+(?:\.\d+)?)\s*천/);
+    const man = str.match(/(\d+(?:\.\d+)?)\s*만/);
+    if (uk) val += parseFloat(uk[1]);
+    if (chun) val += parseFloat(chun[1]) * 0.1;
+    if (!uk && !chun && man) val += parseFloat(man[1]) * 0.0001;
+    if (val === 0) val = parseFloat(str) || 0;
+    return val;
+  }
+
+  function formatBid(uk) {
+    if (uk >= 1) {
+      const rem = Math.round((uk % 1) * 10);
+      if (rem === 0) return `${Math.floor(uk)}억원`;
+      return `${Math.floor(uk)}억 ${rem}천만원`;
+    }
+    return `${Math.round(uk * 100000)}만원`;
+  }
+
+  function placeBid() {
+    const raw = document.getElementById('inputBid').value;
+    const team = document.getElementById('inputTeam').value || '익명팀';
+    const amount = parseBidAmount(raw);
+    if (!amount) { alert('금액을 입력하세요'); return; }
+    bidHistory.unshift({ team, amount });
+    renderBids();
+    document.getElementById('currentBid').textContent = formatBid(amount);
+    document.getElementById('topBidTeam').textContent = team;
+    document.getElementById('inputBid').value = '';
+  }
+
+  function renderBids() {
+    const list = document.getElementById('bidList');
+    list.innerHTML = '';
+    bidHistory.slice(0, 8).forEach((b, i) => {
+      const d = document.createElement('div');
+      d.className = `bid-item${i === 0 ? ' top' : ''}`;
+      d.innerHTML = `<span class="bid-team">${b.team}</span><span class="bid-val">${formatBid(b.amount)}</span>`;
+      list.appendChild(d);
+    });
+  }
+
+  function soldPlayer() {
+    if (!bidHistory.length) { alert('입찰 내역이 없습니다'); return; }
+    const top = bidHistory[0];
+    const name = document.getElementById('currentName').textContent;
+
+    // Update budgets
+    if (teamBudgets[top.team] !== undefined) {
+      teamBudgets[top.team] -= top.amount;
+      if (teamBudgets[top.team] < 0) teamBudgets[top.team] = 0;
+    }
+
+    soakTotal += top.amount;
+    const remain = Math.max(0, totalBudget - soakTotal);
+    document.getElementById('soakAmount').textContent = formatBid(soakTotal);
+    document.getElementById('remainPrize').textContent = formatBid(remain);
+
+    // Overlay
+    document.getElementById('soldPlayerName').textContent = name;
+    document.getElementById('soldTeamName').innerHTML = `→ <span style="color:#00c8ff;font-weight:700;">${top.team}</span> 입단`;
+    document.getElementById('soldBidAmount').textContent = formatBid(top.amount);
+    document.getElementById('soldOverlay').classList.add('show');
+
+    renderTeams();
+  }
+
+  function nextPlayer() {
+    document.getElementById('inputName').value = '';
+    document.getElementById('inputStats').value = '';
+    document.getElementById('currentName').textContent = '닉네임 입력';
+    document.getElementById('currentKD').textContent = '-';
+    document.getElementById('currentWin').textContent = '-';
+    document.getElementById('currentRole').textContent = '-';
+    resetBids(true);
+  }
+
+  function resetBids(soft) {
+    bidHistory = [];
+    document.getElementById('bidList').innerHTML = '<div class="bid-item" style="color:rgba(255,255,255,0.3);justify-content:center;font-size:13px;padding:20px;">경매 시작을 기다리는 중...</div>';
+    document.getElementById('currentBid').textContent = '대기중';
+    document.getElementById('topBidTeam').textContent = '대기중...';
+  }
+
+  // Init
+  initTeams();
+</script>
+</body>
+</html>

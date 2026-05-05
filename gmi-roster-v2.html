@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GmI 클랜원 등급 명단</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;600;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07050f; --card:#0e0a1f;
+  --G:#ff3333; --m:#9b5fff; --I:#ff8800;
+  --lesson:#00cc66; --trainer:#3399ff; --staff:#ffcc00;
+  --border:rgba(123,47,255,0.25);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:#fff;font-family:'Noto Sans KR',sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(123,47,255,0.025) 60px,rgba(123,47,255,0.025) 61px),
+  repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(0,200,255,0.025) 60px,rgba(0,200,255,0.025) 61px);
+  pointer-events:none}
+.wrap{max-width:1440px;margin:0 auto;padding:24px;position:relative}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,rgba(191,0,255,0.08),rgba(0,200,255,0.05));
+  border:1px solid var(--border);border-radius:16px;padding:20px 32px;margin-bottom:24px;
+  position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#ff3333,#9b5fff,#ff8800,#00cc66,#3399ff,#ffcc00)}
+.logo{font-family:'Rajdhani',sans-serif;font-size:52px;font-weight:700;
+  background:linear-gradient(135deg,#bf00ff,#00c8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 10px #bf00ff44)}
+.hcenter h1{font-family:'Black Han Sans',sans-serif;font-size:20px;text-align:center;
+  background:linear-gradient(90deg,#fff,#00c8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hcenter p{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:4px;letter-spacing:2px}
+.summary{display:flex;gap:10px}
+.sbox{padding:10px 16px;border-radius:12px;border:1px solid;text-align:center;min-width:70px}
+.sbox .n{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700}
+.sbox .l{font-size:10px;opacity:.6;letter-spacing:1px}
+.sbox.G{border-color:rgba(255,51,51,.4);background:rgba(255,51,51,.08)}.sbox.G .n{color:var(--G)}
+.sbox.m{border-color:rgba(155,95,255,.4);background:rgba(155,95,255,.08)}.sbox.m .n{color:var(--m)}
+.sbox.I{border-color:rgba(255,136,0,.4);background:rgba(255,136,0,.08)}.sbox.I .n{color:var(--I)}
+.sbox.T{border-color:rgba(51,153,255,.4);background:rgba(51,153,255,.08)}.sbox.T .n{color:var(--trainer)}
+.sbox.L{border-color:rgba(0,204,102,.4);background:rgba(0,204,102,.08)}.sbox.L .n{color:var(--lesson)}
+.sbox.miss{border-color:rgba(255,60,60,.3);background:rgba(255,60,60,.06)}.sbox.miss .n{color:#ff6666}
+
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tab{padding:10px 22px;border-radius:10px;border:1px solid var(--border);cursor:pointer;
+  font-family:'Black Han Sans',sans-serif;font-size:13px;background:transparent;
+  color:rgba(255,255,255,.45);transition:all .2s}
+.tab.active{background:rgba(123,47,255,.2);border-color:#7b2fff;color:#fff}
+.section{display:none}.section.active{display:block}
+
+/* GRADE SECTION BLOCK */
+.grade-section{margin-bottom:28px}
+.grade-header{display:flex;align-items:center;gap:12px;padding:10px 18px;border-radius:12px;
+  margin-bottom:14px;border:1px solid}
+.grade-header.G{background:rgba(255,51,51,.08);border-color:rgba(255,51,51,.3)}
+.grade-header.m{background:rgba(155,95,255,.08);border-color:rgba(155,95,255,.3)}
+.grade-header.I{background:rgba(255,136,0,.08);border-color:rgba(255,136,0,.3)}
+.grade-header.T{background:rgba(51,153,255,.08);border-color:rgba(51,153,255,.3)}
+.grade-header.L{background:rgba(0,204,102,.08);border-color:rgba(0,204,102,.3)}
+.grade-header.S{background:rgba(255,204,0,.08);border-color:rgba(255,204,0,.3)}
+.grade-badge{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;flex-shrink:0}
+.gb-G{background:rgba(255,51,51,.15);color:var(--G);border:1px solid rgba(255,51,51,.4)}
+.gb-m{background:rgba(155,95,255,.15);color:var(--m);border:1px solid rgba(155,95,255,.4)}
+.gb-I{background:rgba(255,136,0,.15);color:var(--I);border:1px solid rgba(255,136,0,.4)}
+.gb-T{background:rgba(51,153,255,.15);color:var(--trainer);border:1px solid rgba(51,153,255,.4)}
+.gb-L{background:rgba(0,204,102,.15);color:var(--lesson);border:1px solid rgba(0,204,102,.4)}
+.gb-S{background:rgba(255,204,0,.15);color:var(--staff);border:1px solid rgba(255,204,0,.4)}
+.grade-title{font-family:'Black Han Sans',sans-serif;font-size:16px}
+.grade-title.G{color:var(--G)}.grade-title.m{color:var(--m)}.grade-title.I{color:var(--I)}
+.grade-title.T{color:var(--trainer)}.grade-title.L{color:var(--lesson)}.grade-title.S{color:var(--staff)}
+.grade-desc{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
+.grade-count{margin-left:auto;font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;opacity:.6}
+
+/* PLAYER CARDS */
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.pcard{background:var(--card);border-radius:12px;border:1px solid;overflow:hidden;
+  transition:transform .2s,box-shadow .2s;cursor:pointer}
+.pcard:hover{transform:translateY(-2px)}
+.pcard.G{border-color:rgba(255,51,51,.35)}.pcard.G:hover{box-shadow:0 6px 24px rgba(255,51,51,.15)}
+.pcard.m{border-color:rgba(155,95,255,.35)}.pcard.m:hover{box-shadow:0 6px 24px rgba(155,95,255,.2)}
+.pcard.I{border-color:rgba(255,136,0,.35)}.pcard.I:hover{box-shadow:0 6px 24px rgba(255,136,0,.15)}
+.pcard.T{border-color:rgba(51,153,255,.35)}.pcard.T:hover{box-shadow:0 6px 24px rgba(51,153,255,.15)}
+.pcard.L{border-color:rgba(0,204,102,.35)}.pcard.L:hover{box-shadow:0 6px 24px rgba(0,204,102,.15)}
+.pcard.S{border-color:rgba(255,204,0,.35)}.pcard.S:hover{box-shadow:0 6px 24px rgba(255,204,0,.15)}
+.pc-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05)}
+.pc-name{font-size:15px;font-weight:700}
+.pc-note{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px}
+.pc-body{padding:10px 14px}
+.pc-id{font-family:'Rajdhani',sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:8px}
+.pc-actions{display:flex;gap:6px}
+.btn-dak{flex:1;padding:7px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);font-size:11px;
+  text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s}
+.btn-dak:hover{background:rgba(255,255,255,.1);color:#fff}
+.btn-copy{padding:7px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);color:rgba(255,255,255,.4);font-size:11px;
+  cursor:pointer;transition:all .2s}
+.btn-copy:hover{background:rgba(255,255,255,.08);color:#fff}
+
+/* MISSING */
+.miss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.miss-card{background:rgba(255,40,40,.05);border:1px solid rgba(255,60,60,.18);border-radius:12px;
+  padding:14px 16px;position:relative}
+.miss-name{font-size:15px;font-weight:700}
+.miss-grade-tag{display:inline-flex;align-items:center;gap:4px;margin-top:6px;
+  padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700}
+.mgt-G{background:rgba(255,51,51,.12);color:var(--G);border:1px solid rgba(255,51,51,.25)}
+.mgt-m{background:rgba(155,95,255,.12);color:var(--m);border:1px solid rgba(155,95,255,.25)}
+.mgt-I{background:rgba(255,136,0,.12);color:var(--I);border:1px solid rgba(255,136,0,.25)}
+.mgt-T{background:rgba(51,153,255,.12);color:var(--trainer);border:1px solid rgba(51,153,255,.25)}
+.mgt-L{background:rgba(0,204,102,.12);color:var(--lesson);border:1px solid rgba(0,204,102,.25)}
+.miss-status{position:absolute;top:12px;right:12px;font-size:10px;color:rgba(255,100,100,.6)}
+
+/* ALERT */
+.alert{background:rgba(255,60,60,.07);border:1px solid rgba(255,60,60,.25);border-radius:12px;
+  padding:14px 18px;margin-bottom:18px;font-size:13px;color:rgba(255,200,200,.8);line-height:1.6}
+.alert strong{color:#ff9999}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:#1a1430;border:1px solid #7b2fff;
+  border-radius:10px;padding:11px 18px;font-size:13px;color:#fff;opacity:0;
+  pointer-events:none;transition:opacity .3s;z-index:99}
+.toast.show{opacity:1}
+
+/* SEARCH */
+.search-wrap{display:flex;gap:10px;margin-bottom:16px}
+.search-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;padding:10px 16px;color:#fff;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none}
+.search-input:focus{border-color:#7b2fff}
+.search-input::placeholder{color:rgba(255,255,255,.25)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="header">
+  <div style="display:flex;align-items:center;gap:18px">
+    <div class="logo">GmI</div>
+    <div>
+      <div style="font-size:11px;color:rgba(255,255,255,.35);letter-spacing:3px">GYMMRIacademy</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.2);margin-top:2px">CLAN ROSTER · GRADE SYSTEM</div>
+    </div>
+  </div>
+  <div class="hcenter">
+    <h1>🏆 GmI 클랜원 등급 명단</h1>
+    <p>색상 기반 등급 분류 · dak.gg 전적 바로가기</p>
+  </div>
+  <div class="summary">
+    <div class="sbox G"><div class="n">2</div><div class="l">🔴 G등급</div></div>
+    <div class="sbox m"><div class="n">2</div><div class="l">🟣 m등급</div></div>
+    <div class="sbox I"><div class="n">28</div><div class="l">🟠 I등급</div></div>
+    <div class="sbox T"><div class="n">1</div><div class="l">🔵 트레이너</div></div>
+    <div class="sbox L"><div class="n">1</div><div class="l">🟢 레슨생</div></div>
+    <div class="sbox miss"><div class="n">23</div><div class="l">❌ 미제출</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('roster',this)">📋 전체 명단 (ID 제출)</button>
+  <button class="tab" onclick="showTab('missing',this)">⚠️ 미제출자 (24명)</button>
+</div>
+
+<!-- ROSTER -->
+<div id="tab-roster" class="section active">
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="🔍  닉네임 또는 인게임 ID 검색..." oninput="searchPlayers(this.value)">
+  </div>
+  <div id="rosterContent"></div>
+</div>
+
+<!-- MISSING -->
+<div id="tab-missing" class="section">
+  <div class="alert">
+    ⚠️ <strong>총 24명</strong>이 #전적관리-ID-작성 채널에 인게임 ID를 미제출했습니다.<br>
+    경매 참여를 원하는 경우 내전 전까지 등록 완료해야 합니다. 공지 필요!
+  </div>
+  <div id="missingContent"></div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ DATA ============
+const SUBMITTED = [
+  // 운영진/클랜장
+  {name:'무리',id:'Gml_muri',grade:'S',note:'원장 · 클랜장'},
+  // G등급 (빨간색)
+  {name:'Magyar-',id:'Magyar-',grade:'G',note:''},
+  {name:'뿌뿌',id:'Gml_bbubbu',grade:'G',note:''},
+  // m등급 (보라색)
+  {name:'박박',id:'Gml_rR',grade:'m',note:''},
+  {name:'성진',id:'Gml_Arcade',grade:'m',note:'DRX'},
+  // 트레이너 (파란색) — 서바이버 티어 유지 G등급 이상만
+  {name:'준구',id:'Gml_rabbit',grade:'T',note:'상담DM · 트레이너'},
+  // 레슨생 (초록색)
+  {name:'구름',id:'K_B_D_G',grade:'L',note:'레슨생'},
+  // I등급 (주황계열) - 이하 모두
+  {name:'동우',id:'Gml_D',grade:'I',note:''},
+  {name:'빡빡버거',id:'Gml_PackPack',grade:'I',note:''},
+  {name:'현태',id:'x_HyeOn_x',grade:'I',note:'→ Gml_HyeOn 변경예정'},
+  {name:'heoppy',id:'Gml_heoppy',grade:'I',note:''},
+  {name:'우기다',id:'Gml_WxxGiDA',grade:'I',note:''},
+  {name:'심플',id:'Gml_Simple',grade:'I',note:''},
+  {name:'ZM_kkxmm',id:'Gml_kkamm',grade:'I',note:'닉변완'},
+  {name:'아채',id:'Gml_Yachae',grade:'I',note:''},
+  {name:'배로',id:'Gml_brw',grade:'I',note:''},
+  {name:'덕덕',id:'Gml_dkdk',grade:'I',note:'닉변완'},
+  {name:'형진',id:'GMI_GMI',grade:'I',note:''},
+  {name:'선우',id:'New_we',grade:'I',note:''},
+  {name:'염프',id:'BLX_Yeop',grade:'I',note:'→ Gml_Yeop 변경예정'},
+  {name:'EOMTI',id:'Gml_eMt',grade:'I',note:''},
+  {name:'근이',id:'Gml_gne',grade:'I',note:'변경예정'},
+  {name:'다이안',id:'Reaperdian',grade:'I',note:'변경예정'},
+  {name:'타키',id:'Gml_taki',grade:'I',note:'변경완료'},
+  {name:'쭌',id:'JJunE_03',grade:'I',note:''},
+  {name:'동영',id:'Gml_young',grade:'I',note:''},
+  {name:'미쯔',id:'PPzzang77',grade:'I',note:''},
+  {name:'_JM',id:'Jayffy5',grade:'I',note:'변경예정'},
+  {name:'불리',id:'07382-_-',grade:'I',note:''},
+  {name:'청큐니',id:'Cheongkuni',grade:'I',note:''},
+  {name:'CHANGE',id:'Gml_CHANGE',grade:'I',note:''},
+  {name:'아이크',id:'Gml_IkeJang',grade:'I',note:''},
+  {name:'라호',id:'Gml_laho',grade:'I',note:''},
+  {name:'감티',id:'Gml_GAMTI',grade:'I',note:''},
+  {name:'빡이',id:'Gml_bbak',grade:'I',note:''},
+];
+
+const MISSING = [
+  // G등급 미제출
+  {name:'동주',grade:'G'},{name:'세인',grade:'G'},
+  // m등급 미제출
+  {name:'G1oria 集小成大',grade:'m'},
+  // I등급 미제출
+  {name:'asd123',grade:'I'},{name:'ddong28556',grade:'I'},{name:'Yuru_98',grade:'I'},
+  {name:'갱두kamikaze',grade:'I'},{name:'똑불(아아아휴아)',grade:'I'},
+  {name:'레드',grade:'I'},{name:'운규',grade:'I'},{name:'주프로',grade:'I'},
+  {name:'꿀맛수박',grade:'I'},{name:'두쿵',grade:'I'},{name:'미유쫭',grade:'I'},
+  {name:'미쩌',grade:'I'},{name:'범석',grade:'I'},{name:'빵다',grade:'I'},
+  {name:'세휘',grade:'I'},{name:'유희',grade:'I'},{name:'좌',grade:'I'},{name:'탱구',grade:'I'},
+  // 트레이너 미제출
+  {name:'츄포',grade:'T'},
+  // 레슨생 미제출
+  {name:'DADA',grade:'L'},{name:'록라니',grade:'L'},
+];
+
+const GRADE_META = {
+  S:{label:'🟡 운영진 / 클랜장',desc:'클랜 운영진 · 편집자',color:'var(--staff)',dot:'🟡'},
+  G:{label:'🔴 G 등급',desc:'에이스급 · 경매 최상위 매물',color:'var(--G)',dot:'🔴'},
+  m:{label:'🟣 m 등급',desc:'준에이스 · 가성비 픽',color:'var(--m)',dot:'🟣'},
+  I:{label:'🟠 I 등급',desc:'실속형 · 숨은 진주',color:'var(--I)',dot:'🟠'},
+  T:{label:'🔵 트레이너',desc:'코치 · 진행 스태프',color:'var(--trainer)',dot:'🔵'},
+  L:{label:'🟢 레슨생',desc:'레슨 수강생',color:'var(--lesson)',dot:'🟢'},
+};
+const GRADE_ORDER = ['S','G','m','I','T','L'];
+
+function dakUrl(id){ return 'https://dak.gg/pubg/players/'+encodeURIComponent(id); }
+
+function makeCard(m){
+  const g = m.grade;
+  return `<div class="pcard ${g}" data-name="${m.name}" data-id="${m.id}">
+    <div class="pc-top">
+      <div class="grade-badge gb-${g}">${g==='S'?'★':g==='T'?'코':g==='L'?'생':g}</div>
+      <div>
+        <div class="pc-name">${m.name}</div>
+        <div class="pc-note">${m.note||'&nbsp;'}</div>
+      </div>
+    </div>
+    <div class="pc-body">
+      <div class="pc-id">📌 ${m.id}</div>
+      <div class="pc-actions">
+        <a class="btn-dak" href="${dakUrl(m.id)}" target="_blank">🔍 dak.gg 전적</a>
+        <button class="btn-copy" onclick="copyTxt('${m.id}')">복사</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderRoster(filter=''){
+  const content = document.getElementById('rosterContent');
+  const q = filter.toLowerCase();
+  content.innerHTML = '';
+  GRADE_ORDER.forEach(g=>{
+    const members = SUBMITTED.filter(m=>m.grade===g && (
+      !q || m.name.toLowerCase().includes(q) || m.id.toLowerCase().includes(q)
+    ));
+    if(!members.length) return;
+    const meta = GRADE_META[g];
+    const div = document.createElement('div');
+    div.className = 'grade-section';
+    div.innerHTML = `
+      <div class="grade-header ${g}">
+        <div class="grade-badge gb-${g}">${g==='S'?'★':g==='T'?'코':g==='L'?'생':g}</div>
+        <div>
+          <div class="grade-title ${g}">${meta.label}</div>
+          <div class="grade-desc">${meta.desc}</div>
+        </div>
+        <div class="grade-count">${members.length}명</div>
+      </div>
+      <div class="player-grid">${members.map(makeCard).join('')}</div>
+    `;
+    content.appendChild(div);
+  });
+}
+
+function renderMissing(){
+  const content = document.getElementById('missingContent');
+  content.innerHTML = '';
+  GRADE_ORDER.filter(g=>g!=='S').forEach(g=>{
+    const members = MISSING.filter(m=>m.grade===g);
+    if(!members.length) return;
+    const meta = GRADE_META[g];
+    const div = document.createElement('div');
+    div.className = 'grade-section';
+    div.innerHTML = `
+      <div class="grade-header ${g}">
+        <div class="grade-badge gb-${g}">${g==='T'?'코':g==='L'?'생':g}</div>
+        <div>
+          <div class="grade-title ${g}">${meta.label} — 미제출</div>
+          <div class="grade-desc">인게임 ID 작성 필요</div>
+        </div>
+        <div class="grade-count">${members.length}명</div>
+      </div>
+      <div class="miss-grid">${members.map(m=>`
+        <div class="miss-card">
+          <span class="miss-status">❌ 미제출</span>
+          <div class="miss-name">${m.name}</div>
+          <div class="miss-grade-tag mgt-${g}">${meta.dot} ${meta.label.replace(/🔴|🟣|🟠|🔵|🟢|🟡/g,'').trim()}</div>
+        </div>`).join('')}
+      </div>
+    `;
+    content.appendChild(div);
+  });
+}
+
+function showTab(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function searchPlayers(q){ renderRoster(q); }
+
+function copyTxt(txt){
+  navigator.clipboard.writeText(txt);
+  const t = document.getElementById('toast');
+  t.textContent = `"${txt}" 복사완료!`;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+renderRoster();
+renderMissing();
+</script>
+</body>
+</html>
