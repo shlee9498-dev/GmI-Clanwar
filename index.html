@@ -68,14 +68,18 @@ section{position:relative;z-index:1}
 .hero-title{font-family:'Black Han Sans',sans-serif;font-size:clamp(18px,4vw,32px);
   margin-top:12px;color:rgba(255,255,255,.7);letter-spacing:2px}
 .hero-desc{max-width:560px;font-size:15px;color:var(--muted);line-height:1.9;margin:24px auto 0}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:36px}
-.btn-primary{padding:14px 32px;border-radius:50px;background:linear-gradient(135deg,var(--accent),var(--m));
-  color:#fff;font-family:'Black Han Sans',sans-serif;font-size:15px;text-decoration:none;
-  box-shadow:0 0 40px rgba(191,0,255,0.3);transition:all .25s}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(191,0,255,0.5)}
-.btn-secondary{padding:14px 32px;border-radius:50px;border:1px solid rgba(255,255,255,.15);
-  color:rgba(255,255,255,.7);font-family:'Black Han Sans',sans-serif;font-size:15px;text-decoration:none;transition:all .25s}
-.btn-secondary:hover{border-color:rgba(255,255,255,.4);color:#fff}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:36px;flex-direction:column;align-items:center}
+.btn-primary{padding:18px 40px;border-radius:50px;background:linear-gradient(135deg,var(--accent),var(--m));
+  color:#fff;font-family:'Black Han Sans',sans-serif;font-size:18px;text-decoration:none;
+  box-shadow:0 0 40px rgba(191,0,255,0.4);transition:all .25s;width:100%;max-width:420px;text-align:center}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 70px rgba(191,0,255,0.6)}
+.btn-secondary{padding:18px 40px;border-radius:50px;
+  background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(191,0,255,0.1));
+  border:2px solid rgba(0,200,255,0.5);
+  color:#fff;font-family:'Black Han Sans',sans-serif;font-size:18px;text-decoration:none;
+  transition:all .25s;width:100%;max-width:420px;text-align:center;
+  box-shadow:0 0 30px rgba(0,200,255,0.2)}
+.btn-secondary:hover{border-color:var(--cyan);box-shadow:0 0 50px rgba(0,200,255,0.4);transform:translateY(-2px)}
 .hero-stats{display:flex;gap:40px;justify-content:center;margin-top:60px;flex-wrap:wrap}
 .hstat{text-align:center}
 .hstat-n{font-family:'Rajdhani',sans-serif;font-size:40px;font-weight:700;
@@ -233,7 +237,7 @@ footer{padding:40px 24px;border-top:1px solid var(--border);text-align:center}
       <a href="#grades" class="nav-link">등급</a>
       <a href="https://shlee9498-dev.github.io/mri-academy/" target="_blank" class="nav-link">MRI Academy</a>
     </div>
-    <a href="https://discord.gg/zmMexcHFp" target="_blank" class="nav-cta">💬 디스코드 입장</a>
+    <a href="https://discord.gg/9RjqdSKw" target="_blank" class="nav-cta">💬 디스코드 입장</a>
   </div>
 </nav>
 
@@ -248,8 +252,8 @@ footer{padding:40px 24px;border-top:1px solid var(--border);text-align:center}
   </div>
 
   <div class="hero-btns">
-    <a href="https://discord.gg/zmMexcHFp" target="_blank" class="btn-primary">💬 참가 신청 (#내전-신청-접수처)</a>
-    <a href="./gmi-final-bible.html" class="btn-secondary">📖 완전 가이드 보기</a>
+    <a href="https://discord.gg/9RjqdSKw" target="_blank" class="btn-primary">💬 내전 참가 신청하기</a>
+    <a href="./gmi-final-bible.html" class="btn-secondary">📖 완전 가이드 보기 (룰 · 공지 · 운영 전부)</a>
   </div>
   <div class="hero-stats">
     <div class="hstat"><div class="hstat-n">05.10</div><div class="hstat-l">일요일 경매 START</div></div>
@@ -306,7 +310,7 @@ footer{padding:40px 24px;border-top:1px solid var(--border);text-align:center}
             </div>
           </div>
           <div class="sc-action">
-            <a href="https://discord.gg/zmMexcHFp" target="_blank" class="sc-btn primary-btn">💬 #내전-신청-접수처</a>
+            <a href="https://discord.gg/9RjqdSKw" target="_blank" class="sc-btn primary-btn">💬 #내전-신청-접수처</a>
             <a href="./gmi-final-bible.html" class="sc-btn">📖 완전 가이드</a>
           </div>
         </div>
@@ -453,7 +457,7 @@ footer{padding:40px 24px;border-top:1px solid var(--border);text-align:center}
   <div class="footer-logo">GmI</div>
   <div style="font-size:12px;color:var(--muted);margin-top:6px">GYMMRIacademy Clan War Portal</div>
   <div class="footer-links">
-    <a href="https://discord.gg/zmMexcHFp" target="_blank" class="footer-link">💬 디스코드 (#내전-신청-접수처)</a>
+    <a href="https://discord.gg/9RjqdSKw" target="_blank" class="footer-link">💬 디스코드 (#내전-신청-접수처)</a>
     <a href="https://www.sooplive.com/station/zmdk1373" target="_blank" class="footer-link">📺 이무리 SOOP</a>
     <a href="https://shlee9498-dev.github.io/mri-academy/" target="_blank" class="footer-link">🎓 MRI Academy</a>
     <a href="#seasons" class="footer-link">🏆 시즌 기록</a>
